@@ -1,51 +1,43 @@
-#
-#Flight simulator.
-#Write a code in python that simulates the tilt correction of the plane (angle between plane wings and earth).
-#The program should print out current orientation, and applied tilt correction.
-#The program should run in infinite loop, until user breaks the loop.
-#Assume that plane orientation in every new simulation step is random angle with gaussian distribution (the planes is experiencing "turbulations").
+from random import gauss
+import logging
+import time
 
-#With every simulation step the orentation should be corrected, applied and printed out.
-#Try to expand your implementation as best as you can.
-#Think of as many features as you can, and try implementing them.
-#
-#Make intelligent use of pythons syntactic sugar (overloading, iterators, generators, etc)
-#Most of all: CREATE GOOD, RELIABLE, READABLE CODE.
-#The goal of this task is for you to SHOW YOUR BEST python programming skills.
-#Impress everyone with your skills, show off with your code.
-#
-#When you are done upload this code to your github repository.
-#
-#Delete these comments before commit!
-#Good luck.
-import random
 
 class Plane:
 
-    def __init__(self, tilt):
-        self.tilt = tilt
-        self.x = []
-        self.y = []
-        self.z = []
-
-    def current_orientation(self):
-        pass
+    def __init__(self):
+        self.tilt = 0
 
     def tilt_correction(self):
-        pass
+        if self.tilt > 0:
+            self.tilt -= 2
+        else:
+            self.tilt += 2
 
-class Disturbance:
+    def __str__(self):
+        return "The tilt is {}°".format(self.tilt)
 
-    def __init__(self):
-        pass
+class Environment:
 
-    def random_disturbance(self):
-        random.random() * 100
+    def __init__(self, plane):
+        self.plane = plane
+        self.turbulence = 0
 
+    def flight_simulation(self):
+        self.turbulence = gauss(mu=0, sigma=3)
+        self.plane.tilt += self.turbulence
+        self.plane.tilt_correction()
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
+    plane1 = Plane()
+    environment1 = Environment(plane1)
+
     while True:
-        pass
+        environment1.flight_simulation()
+        logging.debug('New turbulence: {}, Tilt after correction: {}'
+                      .format(environment1.turbulence, plane1.tilt))
+        time.sleep(4)
 
 if __name__ == '__main__':
     main()
